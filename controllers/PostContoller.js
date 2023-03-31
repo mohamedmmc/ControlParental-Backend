@@ -39,7 +39,7 @@ export async function addPost(req, res) {
   Post.create({
     title: req.body.title,
     description: req.body.description,
-    image: `${req.protocol}://${req.get("host")}/img/${req.file.filename}`,
+    image: `${req.protocol}://${req.get("host")}/upload/${req.file.filename}`,
     //userId:req.body.userId
   })
     .then((newPost) => {
@@ -83,7 +83,7 @@ export async function getPost(req, res) {
 //get all posts
 export async function getAllPosts(req, res) {
   const id = req.params.id;
-  Post.find({ userId: id })
+  Post.find()
     .then((doc) => {
       res.status(200).json(doc);
     })

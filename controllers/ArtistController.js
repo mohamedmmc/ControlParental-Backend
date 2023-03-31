@@ -32,7 +32,9 @@ export function AddArtist(req, res) {
     mdp: req.body.mdp,
     confirmMdp: req.body.confirmMdp,
     FullName: req.body.FullName,
-    ProfilePic: `${req.protocol}://${req.get("host")}/img/${req.file.filename}`,
+    ProfilePic: `${req.protocol}://${req.get("host")}/upload/${
+      req.file.filename
+    }`,
   })
     .then((newArtist) => {
       res.status(200).json(newArtist);
