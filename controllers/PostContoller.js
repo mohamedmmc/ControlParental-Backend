@@ -2,6 +2,7 @@ import Post from "../models/Post.js";
 import jwt from "jsonwebtoken";
 import Artist from "../models/Artist.js";
 import mongoose from "mongoose";
+import sendEmail from "../middlewares/sendEmail.js";
 
 // export async function VerifyTokenPost(req, res, next){
 

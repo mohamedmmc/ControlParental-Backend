@@ -327,7 +327,7 @@ export async function resetOTP(req, res) {
   if (!user) throw new Error("User does not exist");
 
   //generate otp
-  const otpGenerated = await generateOTP();
+  const otpGenerated = generateOTP();
 
   //update database
   user.resetOTP = otpGenerated;
