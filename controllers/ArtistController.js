@@ -168,25 +168,20 @@ export async function registerArtist(req, res) {
 
 export async function verifyEmail(req, res) {
   const { email, otp } = req.body;
-  const user = validateUserSignUp(email, otp);
-  res.status(200).json(user);
-}
-
-export async function validateUserSignUp(email, otp) {
   const user = await Artist.findOne({
     email,
   });
   if (!user) {
-    return [false, "User not found"];
+    return res.status(400).json("User not found");
   }
   if (user && user.otp !== otp) {
-    return [false, "Invalid OTP"];
+    return res.status(400).json("User not found");
   }
 
   const updatedUser = await Artist.findByIdAndUpdate(user._id, {
     verified: true,
   });
-  console.log(updatedUser);
+  return res.status(200).json(user);
 }
 
 //Login artist

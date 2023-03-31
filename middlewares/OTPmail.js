@@ -1,26 +1,24 @@
-import nodemailer from 'nodemailer';
-import dotenv  from 'dotenv';
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 dotenv.config();
 
+const transporter = nodemailer.createTransport({
+  host: process.env.HOST_MAIL,
+  port: process.env.MAIL_PORT,
+  secure: false,
+  auth: {
+    user: process.env.USERGMAIL,
+    pass: process.env.PASSGMAIL,
+  },
+});
 
-    
-  const transporter = nodemailer.createTransport(
-    {
-        service: process.env.SERVICE,
-        auth: {
-          user: process.env.USER,
-          pass: process.env.PASS,
-        }
-      }
-  );
-
-   const  sendMailOTP = async (email,text) => {
-    try {
-        await transporter.sendMail({
-        from: process.env.USER,
-        to: email, 
-        subject: 'Hello ✔',
-        html: `
+const sendMailOTP = async (email, text) => {
+  try {
+    await transporter.sendMail({
+      from: process.env.USER,
+      to: email,
+      subject: "Hello ✔",
+      html: `
         <div
           class="container"
           style="max-width: 90%; margin: auto; padding-top: 20px"
@@ -31,13 +29,11 @@ dotenv.config();
           <h1 style="font-size: 40px; letter-spacing: 2px; text-align:center;">${text}</h1>
      </div>
       `,
-      });
-      console.log("email sent sucessfully");
-    }
-    
-    catch (error) {
-      console.log(error);
-    }
-  };
+    });
+    console.log("email sent sucessfully");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-  export default sendMailOTP
+export default sendMailOTP;
