@@ -196,7 +196,7 @@ export async function login(req, res) {
 
     const artist = await Artist.findOne({ email });
 
-    if (artist && bcrypt.compare(mdp, artist.mdp)) {
+    if (artist && (await bcrypt.compare(mdp, artist.mdp))) {
       // Create token
       const token = jwt.sign(
         { user_id: Artist._id, email },
@@ -376,34 +376,44 @@ export async function sendpasswordEmail(req, res) {
         sendEmail(user.email, "Password Reset", OTP);
         user.otpReset = OTP;
         res.status(200).json(user);
-        console.log(user);
       })
       .catch((err) => {
         res.status(500).json({ error: err });
       });
+  } else {
+    return res.status(404);
   }
 }
 
 export async function resetPassword(req, res) {
-  const user = await Artist.findOne({ email: req.body.email });
+  try {
+    const user = await Artist.findOne({ email: req.body.email });
 
-  if (user) {
-    if (req.body.otpReset === user.otpReset) {
-      const EncryptedPassword = await bcrypt.hash(req.body.mdp, 10);
-      await Artist.findOneAndUpdate(
-        { _id: user._id },
-        {
-          mdp: EncryptedPassword,
-        }
-      )
-        .then((docs) => {
-          res.status(200).json(docs);
-        })
-        .catch((err) => {
-          res.status(500).json("Cant reset password");
-        });
+    if (user) {
+      if (req.body.otpReset === user.otpReset) {
+        const EncryptedPassword = await bcrypt.hash(req.body.mdp, 10);
+        await Artist.findOneAndUpdate(
+          { _id: user._id },
+          {
+            mdp: EncryptedPassword,
+          }
+        )
+          .then((docs) => {
+            res.status(200).json(docs);
+          })
+          .catch((err) => {
+            res.status(500).json("Cant reset password");
+          });
+      } else {
+        return res.status(404).json("wrong otp");
+      }
+    } else {
+      return res.status(404).json("user not found");
     }
+  } catch (error) {
+    return res.status(500).json(error);
   }
+
   // }
 }
 
