@@ -25,23 +25,23 @@ import sendEmail from "../middlewares/sendEmail.js";
 
 // create post
 export async function addPost(req, res) {
-  // const {userId}=req.body;
-  // let existingUser;
-  // try{
-  //     existingUser=await Artist.findById(userId)
-
-  // }
-  // catch(err){
-  //     return console.log(err);
-  // }
-  // if(!existingUser){
-  //     return res.status(400).json({message:"Unable to find the user"});
-  // }
+  const { userId } = req.body;
+  let existingUser;
+  try {
+    existingUser = await Artist.findById(userId);
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
+  if (!existingUser) {
+    return res.status(400).json({ message: "Unable to find the user" });
+  }
   Post.create({
     title: req.body.title,
     description: req.body.description,
-    image: `${req.protocol}://${req.get("host")}/upload/${req.file.filename}`,
-    //userId:req.body.userId
+    image: req.file?.filename
+      ? `${req.protocol}://${req.get("host")}/upload/${req.file.filename}`
+      : "no image",
+    userId: userId,
   })
     .then((newPost) => {
       //existingUser.posts.push(newPost);
@@ -85,6 +85,7 @@ export async function getPost(req, res) {
 export async function getAllPosts(req, res) {
   const id = req.params.id;
   Post.find()
+    .populate("userId")
     .then((doc) => {
       res.status(200).json(doc);
     })
