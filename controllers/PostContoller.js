@@ -4,25 +4,6 @@ import Artist from "../models/Artist.js";
 import mongoose from "mongoose";
 import sendEmail from "../middlewares/sendEmail.js";
 
-// export async function VerifyTokenPost(req, res, next){
-
-//     const token= req.body.token || req.query.token || req.headers["x-access-token"];
-
-//     if (!token) {
-//         return res.status(403).send("A token is required to add a post");
-//       }
-
-//     try {
-//         const decoded = jwt.verify(token, process.env.TOKEN_KEY);
-//         req.artist = artist;
-//         }
-//       catch (err) {
-//         return res.status(401).send("Invalid Token");
-//       }
-
-//       return next();
-// }
-
 // create post
 export async function addPost(req, res) {
   const { userId } = req.body;
@@ -72,7 +53,8 @@ export async function UpdatePostById(req, res) {
 //get post by Id
 export async function getPost(req, res) {
   const id = req.params.id;
-  Post.findById(id)
+  Post.find({ userId: id })
+    .populate("userId")
     .then((doc) => {
       res.status(200).json(doc);
     })
