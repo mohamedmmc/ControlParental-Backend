@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import Joi from "Joi";
 import dotenv from "dotenv";
-
+import cloudinary from "../middlewares/cloudinary.js";
 dotenv.config();
 
 //get all artists
@@ -25,23 +25,23 @@ export function getAllArtists(req, res) {
 
 //add one artist
 
-export function AddArtist(req, res) {
-  Artist.create({
-    idArtist: req.body.idArtist,
-    email: req.body.email,
-    mdp: req.body.mdp,
-    confirmMdp: req.body.confirmMdp,
-    FullName: req.body.FullName,
-    ProfilePic: `${req.protocol}://${req.get("host")}/upload/${
-      req.file.filename
-    }`,
-  })
-    .then((newArtist) => {
-      res.status(200).json(newArtist);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
+export async function AddArtist(req, res) {
+  try {
+    let newArtist = await Artist.create({
+      idArtist: req.body.idArtist,
+      email: req.body.email,
+      mdp: req.body.mdp,
+      confirmMdp: req.body.confirmMdp,
+      FullName: req.body.FullName,
     });
+    if (req.file) {
+      const photoCloudinary = await cloudinary.uploader.upload(req.file.path);
+      newArtist.ProfilePic = photoCloudinary.url;
+    }
+    res.status(200).json(newArtist);
+  } catch (error) {
+    return res.status(500).json({ error: err });
+  }
 }
 
 //Add many artists
@@ -94,10 +94,9 @@ export async function UpdateArtistById(req, res) {
       if (req.body.BirthDate != null) {
         foundArtist.BirthDate = req.body.BirthDate;
       }
-      if (req.file != null) {
-        foundArtist.ProfilePic = `${req.protocol}://${req.get("host")}/upload/${
-          req.file?.filename
-        }`;
+      if (req.file) {
+        const photoCloudinary = await cloudinary.uploader.upload(req.file.path);
+        foundArtist.ProfilePic = photoCloudinary.url;
       }
       const updatedUser = await foundArtist.save();
       return res.status(200).json(updatedUser);
@@ -398,6 +397,20 @@ export async function sendpasswordEmail(req, res) {
       });
   } else {
     return res.status(404);
+  }
+}
+
+export async function resendOTP(req, res) {
+  try {
+    const user = await Artist.findById(req.body.id);
+    if (user) {
+      sendMailOTP(user.email, user.otp);
+      return res.status(200).json(user);
+    } else {
+      return res.status(404).json("user not found");
+    }
+  } catch (error) {
+    return res.status(500).json(error);
   }
 }
 

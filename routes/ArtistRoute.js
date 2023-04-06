@@ -15,6 +15,7 @@ import {
   UpdateArtistById,
   followArtist,
   unfollowArtist,
+  resendOTP,
 } from "../controllers/ArtistController.js";
 import { check, validationResult } from "express-validator";
 import auth from "../middlewares/auth.js";
@@ -51,6 +52,8 @@ router.route("/logOut").post(signOut);
 router.post("/welcome", auth, (req, res) => {
   res.status(200).send("Welcome");
 });
+
+router.route("/resend/OTP").post(resendOTP);
 
 router.route("/getOTP").post(sendpasswordEmail);
 
