@@ -76,21 +76,37 @@ export function deleteOneArtist(req, res) {
 export async function UpdateArtistById(req, res) {
   const id = req.params.id;
 
-  Artist.findByIdAndUpdate(id, {
-    $set: {
-      username: req.body.username,
-      PhoneNumber: req.body.PhoneNumber,
-      Gender: req.body.Gender,
-      BirthDate: req.body.BirthDate,
-      Description: req.body.Description,
-    },
-  })
-    .then((docs) => {
-      res.status(200).json(docs);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
+  try {
+    const foundArtist = await Artist.findById(id);
+    if (foundArtist) {
+      if (req.body.username != null) {
+        foundArtist.username = req.body.username;
+      }
+      if (req.body.PhoneNumber != null) {
+        foundArtist.PhoneNumber = req.body.PhoneNumber;
+      }
+      if (req.body.Gender != null) {
+        foundArtist.Gender = req.body.Gender;
+      }
+      if (req.body.Description != null) {
+        foundArtist.Description = req.body.Description;
+      }
+      if (req.body.BirthDate != null) {
+        foundArtist.BirthDate = req.body.BirthDate;
+      }
+      if (req.file != null) {
+        foundArtist.ProfilePic = `${req.protocol}://${req.get("host")}/upload/${
+          req.file?.filename
+        }`;
+      }
+      const updatedUser = await foundArtist.save();
+      return res.status(200).json(updatedUser);
+    } else {
+      return res.status(404).json({ reponse: "Utilisateur non trouve" });
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 }
 
 //register
