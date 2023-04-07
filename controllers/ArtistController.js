@@ -33,7 +33,10 @@ export async function AddArtist(req, res) {
     if (req.file) {
       const photoCloudinary = await cloudinary.uploader.upload(req.file.path);
       newArtist.ProfilePic = photoCloudinary.url;
+    } else {
+      newArtist.ProfilePic = "no image";
     }
+    newArtist.save();
     res.status(200).json(newArtist);
   } catch (error) {
     return res.status(500).json({ error: err });

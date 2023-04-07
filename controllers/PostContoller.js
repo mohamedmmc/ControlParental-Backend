@@ -19,9 +19,11 @@ export async function addPost(req, res) {
     if (req.file) {
       const photoCloudinary = await cloudinary.uploader.upload(req.file.path);
       newPost.image = photoCloudinary.url;
+    } else {
+      newPost.image = "no image";
     }
     //existingUser.posts.push(newPost);
-    //existingUser.save();
+    newPost.save();
     res.status(200).json(newPost);
   } catch (err) {
     return res.status(500).json({ message: err });
