@@ -1,8 +1,5 @@
 import Post from "../models/Post.js";
-import jwt from "jsonwebtoken";
 import Artist from "../models/Artist.js";
-import mongoose from "mongoose";
-import sendEmail from "../middlewares/sendEmail.js";
 import cloudinary from "../middlewares/cloudinary.js";
 // create post
 export async function addPost(req, res) {

@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
 const ArtistSchema = new Schema(

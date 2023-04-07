@@ -1,13 +1,9 @@
 import Artist from "../models/Artist.js";
-import tokenReset from "../models/token.js";
 import sendEmail from "../middlewares/sendEmail.js";
 import generateOTP from "../middlewares/otpGenerator.js";
 import sendMailOTP from "../middlewares/OTPmail.js";
 import bcrypt from "bcryptjs";
-import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
-import Joi from "Joi";
 import dotenv from "dotenv";
 import cloudinary from "../middlewares/cloudinary.js";
 dotenv.config();
