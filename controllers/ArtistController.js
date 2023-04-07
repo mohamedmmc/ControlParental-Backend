@@ -167,7 +167,6 @@ export async function registerArtist(req, res) {
     NewArtist.token = token;
     Artist.create(NewArtist).then((docs) => {
       res.status(200).json(NewArtist);
-      sendMailOTP(email, otpGenerated);
     });
   } catch (error) {
     console.log(error);
