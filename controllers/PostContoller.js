@@ -87,17 +87,19 @@ export function deleteOnePost(req, res) {
 }
 
 //Like a post
-
 export async function LikePost(req, res) {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post.likes.includes(req.body.userId)) {
-      await post.updateOne({ $push: { likes: req.body.userId } });
-      res.status(200).json("The post has been liked");
-    } else {
-      await post.updateOne({ $pull: { likes: req.body.userId } });
-      res.status(200).json("The post has been disliked");
-    }
+    const userId = req.body.userId;
+
+    !post.likes.includes(userId)
+      ? await post.updateOne({ $push: { likes: userId } })
+      : await post.updateOne({ $pull: { likes: userId } });
+
+    const message = !post.likes.includes(userId)
+      ? "The post has been liked"
+      : "The post has been disliked";
+    res.status(200).json({ message });
   } catch (err) {
     res.status(500).json(err);
   }

@@ -12,7 +12,6 @@ import flash from "express-flash";
 import Artist from "./models/Artist.js";
 import path from "path";
 const app = express();
-const hostname = "127.0.0.1";
 const port = process.env.PORT || 9090;
 const DataBaseName = "MiniProjeta";
 
@@ -96,6 +95,6 @@ mongoose.mongoose //.connect(`mongodb://localhost:27017/${DataBaseName}`)
 app.use("/MiniProjet", Artistrouter);
 app.use(PostRoute);
 
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(port, () => {
+  console.log(`Server running`);
 });
