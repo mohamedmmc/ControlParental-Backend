@@ -79,10 +79,10 @@ app.get(
     successFlash: "Successfully logged in!",
   })
 );
-
+//  "mongodb+srv://mohamedmmc:puqVk3cI1rOWg7OS@projet.nszmamg.mongodb.net/?retryWrites=true&w=majority",
 mongoose.mongoose //.connect(`mongodb://localhost:27017/${DataBaseName}`)
   .connect(
-    "mongodb+srv://mohamedmmc:puqVk3cI1rOWg7OS@projet.nszmamg.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://oussamaeducation:HsTEd7x3NGHdqWPn@miniprojet.bjn3hcc.mongodb.net/?retryWrites=true&w=majority",
     { useNewUrlParser: true }
   )
   .then(() => {
